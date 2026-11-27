@@ -66,9 +66,9 @@ def get_log_pyramid(img: np.ndarray, sigma: float, k: float, levels: int) -> Tup
     images = []
     sigmas = []
 
-    for i in range(levels):
+    for _ in range(levels):
         size = int(2 * np.floor(3*s) + 1)
-        kernel = create_log_kernel(size, s)
+        kernel = create_log_kernel(size, s) * np.pow(s,2)
         s *= factor 
         images.append(np.abs(cv2.filter2D(img, -1, kernel, borderType=cv2.BORDER_REPLICATE)))
         sigmas.append(s)
