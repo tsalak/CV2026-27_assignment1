@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 
 
-def create_log_kernel(size: int, sig: float) -> float:
+def create_log_kernel(size: int, sig: float) -> np.ndarray:
     """
     Returns a rotationally symmetric Laplacian of Gaussian kernel
     with given 'size' and standard deviation 'sig'
@@ -59,7 +59,23 @@ def get_log_pyramid(img: np.ndarray, sigma: float, k: float, levels: int) -> Tup
     """
 
     # student_code start
-    raise NotImplementedError("TO DO in filters.py")
+
+    factor = k
+    s = sigma
+
+    images = []
+    sigmas = []
+
+    for i in range(levels):
+        size = int(2 * np.floor(3*s) + 1)
+        kernel = create_log_kernel(size, s)
+        s *= factor 
+        images.append(np.abs(cv2.filter2D(img, -1, kernel, borderType=cv2.BORDER_REPLICATE)))
+        sigmas.append(s)
+
+    scale_space = np.stack(images)
+    all_sigmas = np.array(sigmas)
+
     # student_code end
 
     return scale_space, all_sigmas
